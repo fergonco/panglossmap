@@ -28,7 +28,7 @@ for line in fileinput.input():
     print("processing " + line)
     if line not in towns:
         line = line.strip()
-        url = "https://maps.googleapis.com/maps/api/geocode/json?region=ch&address=" + line + "&key=" + apikey
+        url = "https://maps.googleapis.com/maps/api/geocode/json?region=ch&address=" + urllib.request.quote(line) + "&key=" + apikey
         print("querying " + url)
         response = urllib.request.urlopen(url)
         responseContent = response.read()
