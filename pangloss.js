@@ -6,7 +6,6 @@ map.attributionControl.addAttribution("<a href='https://www.openstreetmap.org/co
 
 // OSM layer
 let osmLayer = new L.TileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png");
-map.addLayer(osmLayer);
 
 let coordinateList = [
 [0.942638,48.961817],
@@ -141,8 +140,8 @@ let Wikimedia = L.tileLayer('https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}{r}.
 	minZoom: 1,
 	maxZoom: 19
 });
+map.addLayer(osmfr);
 L.control.layers({
-    OSM: osmLayer,
     "OSM France": osmfr,
     OpenMapSurfer_Roads: OpenMapSurfer_Roads,
     OpenMapSurfer_Grayscale: OpenMapSurfer_Grayscale,
