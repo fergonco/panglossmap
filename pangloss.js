@@ -1,5 +1,4 @@
 import 'leaflet/dist/leaflet.js';
-import 'leaflet.markercluster/dist/leaflet.markercluster.js';
 
 let map = L.map("Map");
 map.attributionControl.setPrefix("");
@@ -88,25 +87,68 @@ function style(feature) {
     };
 }
 
+let icon = L.icon({
+    iconUrl: './user.svg',
+    iconSize: [50, 95], // size of the icon
+});
+
 let benchLayer = L.geoJSON(data, {
     style: style,
     pointToLayer: function (feature, latlng) {
-        return L.circleMarker(latlng)
+        return L.marker(latlng, {icon: icon})
     }
 });
 
-let markerCluster = L.markerClusterGroup({
-    chunkedLoading: true,
-    disableClusteringAtZoom: 16,
-    spiderfyOnMaxZoom: false,
-    showCoverageOnHover: false,
-    iconCreateFunction: function (cluster) {
-        let childCount = cluster.getChildCount();
-        return new L.DivIcon({ html: '<div><span><b>' + childCount + '</b></span></div>', className: 'marker-cluster marker-cluster-large', iconSize: new L.Point(40, 40) });
-    }
+map.addLayer(benchLayer);
+
+map.setView([ 46.252, 6.09 ], 11);
+
+let osmfr = L.tileLayer('https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', {
+	maxZoom: 20,
+	attribution: '&copy; Openstreetmap France | &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 });
-markerCluster.addLayer(benchLayer);
-map.addLayer(markerCluster);
-
-map.setView([ 46.798, 8.385 ], 8);
-
+var OpenMapSurfer_Roads = L.tileLayer('https://korona.geog.uni-heidelberg.de/tiles/roads/x={x}&y={y}&z={z}', {
+	maxZoom: 20,
+	attribution: 'Imagery from <a href="http://giscience.uni-hd.de/">GIScience Research Group @ University of Heidelberg</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+});
+let OpenMapSurfer_Grayscale = L.tileLayer('https://korona.geog.uni-heidelberg.de/tiles/roadsg/x={x}&y={y}&z={z}', {
+	maxZoom: 19,
+	attribution: 'Imagery from <a href="http://giscience.uni-hd.de/">GIScience Research Group @ University of Heidelberg</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+});
+let Hydda_Full = L.tileLayer('https://{s}.tile.openstreetmap.se/hydda/full/{z}/{x}/{y}.png', {
+	maxZoom: 18,
+	attribution: 'Tiles courtesy of <a href="http://openstreetmap.se/" target="_blank">OpenStreetMap Sweden</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+});
+let Stamen_Terrain = L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/terrain/{z}/{x}/{y}{r}.{ext}', {
+	attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+	subdomains: 'abcd',
+	minZoom: 0,
+	maxZoom: 18,
+	ext: 'png'
+});
+let CartoDB_Positron = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}{r}.png', {
+	attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+	subdomains: 'abcd',
+	maxZoom: 19
+});
+let CartoDB_Voyager = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+	attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+	subdomains: 'abcd',
+	maxZoom: 19
+});
+let Wikimedia = L.tileLayer('https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}{r}.png', {
+	attribution: '<a href="https://wikimediafoundation.org/wiki/Maps_Terms_of_Use">Wikimedia</a>',
+	minZoom: 1,
+	maxZoom: 19
+});
+L.control.layers({
+    OSM: osmLayer,
+    "OSM France": osmfr,
+    OpenMapSurfer_Roads: OpenMapSurfer_Roads,
+    OpenMapSurfer_Grayscale: OpenMapSurfer_Grayscale,
+    Hydda_Full: Hydda_Full,
+    Stamen_Terrain: Stamen_Terrain,
+    CartoDB_Positron: CartoDB_Positron,
+    CartoDB_Voyager: CartoDB_Voyager,
+    Wikimedia: Wikimedia
+}, {}).addTo(map);
