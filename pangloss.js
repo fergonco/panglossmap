@@ -89,6 +89,7 @@ function style(feature) {
 let icon = L.icon({
     iconUrl: './user.svg',
     iconSize: [50, 95], // size of the icon
+    iconAnchor: [25, 70]
 });
 
 let benchLayer = L.geoJSON(data, {
